@@ -3,8 +3,6 @@ from wtforms import Form
 
 from app.libs.error_code import ParameterException
 
-__author__ = '七月'
-
 
 class BaseForm(Form):
     def __init__(self):

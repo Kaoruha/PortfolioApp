@@ -1,6 +1,7 @@
 # 在这里定义异常报错的基类
 from flask import request, json
 from werkzeug.exceptions import HTTPException
+import datetime
 
 
 class APIException(HTTPException):
@@ -14,14 +15,15 @@ class APIException(HTTPException):
         if msg:
             self.msg = msg
         if error_code:
-            self.code = error_code
+            self.error_code = error_code
         super(APIException, self).__init__(msg, None)
 
     def get_body(self, environ=None):
         body = dict(
-            msg=self.msg,
-            error_code=self.error_code,
-            request=request.method + ' ' + self.get_url_no_param()
+            code=self.error_code,
+            description=self.msg,
+            request=request.method + ' ' + self.get_url_no_param(),
+            time_stamp=datetime.datetime.now().strftime('%Y-%m-%d,%H:%M:%S')
         )
         text = json.dumps(body)
         return text

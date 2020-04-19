@@ -9,11 +9,11 @@ DATABASE = 'mysql'
 DRIVER = 'pymysql'
 HOST = '47.102.46.64'
 PORT = '3306'
-DATABASE = 'flask_test'
+DATABASE = 'portfolio'
 USERNAME = 'calvin'
 PASSWORD = 'qweasd123'
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://calvin:qweasd123@47.102.46.64:3306/flask_test'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://calvin:qweasd123@47.102.46.64:3306/portfolio'
 # SQLALCHEMY_DATABASE_URI = '{}+{}://{}:{}@{}:{}/{}?charset=utf8'.format(
 #     DATABASE, DRIVER, USERNAME, PASSWORD, HOST, PORT,DATABASE)
 SQLALCHEMY_TRACK_MODIFICATIONS = True
