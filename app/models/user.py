@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, SmallInteger
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.base import Base, db
 
 
@@ -29,7 +29,15 @@ class User(Base):
 
     @classmethod
     def is_user_exist(cls, account):
-        if User.query.filter_by(account=account).first():
+        if cls.query.filter_by(account=account).first():
+            return True
+        else:
+            return False
+
+    @classmethod
+    def is_password_right(cls, account, password):
+        hash = cls.query.filter_by(account=account).first().password
+        if check_password_hash(pwhash=hash, password=password):
             return True
         else:
             return False

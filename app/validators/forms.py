@@ -4,6 +4,7 @@ from wtforms import ValidationError
 from app.models.user import User
 
 from app.validators.base import BaseForm
+from wtforms import Form
 
 
 class ClientForm(BaseForm):
@@ -14,6 +15,5 @@ class ClientForm(BaseForm):
     secret = StringField()
 
 
-
-class TokenForm(BaseForm):
+class TokenForm(Form):
     token = StringField(validators=[DataRequired()])

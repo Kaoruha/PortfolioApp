@@ -5,13 +5,10 @@ import datetime
 
 
 class APIException(HTTPException):
-    code = 500
     msg = "Sorry, we made a mistake. >_<|||"
     error_code = 999
 
-    def __init__(self, code=None, msg=None, error_code=None, headers=None):
-        if code:
-            self.code = code
+    def __init__(self, msg=None, error_code=None, headers=None):
         if msg:
             self.msg = msg
         if error_code:

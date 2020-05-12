@@ -1,11 +1,7 @@
-from flask import request
-
-from app.libs.error import APIException
 from app.libs.yellowprint import YellowPrint
 from app.validators.forms import ClientForm
 from app.models.user import User
 from app.libs.error_code import ParameterException, NoException
-from app.libs.token_auth import auth
 
 yp_user = YellowPrint('rp_user', url_prefix='/user')
 
@@ -35,12 +31,25 @@ def user_register():
         return ParameterException()
 
 
-@yp_user.route('/get2')
-# @auth.login_required
-def get_user():
-    return 'This is getuser page'
+@yp_user.route('/login', methods=['POST'])
+def user_login():
+    # data = request.json
+    # account = data['account']
+    # secret = data['secret']
 
+    # 1、request.data 会自动传入ClientForm
+    form = ClientForm()
+    # 2、对ClientForm对实例进行校验
+    if form.validate():
+        if User.is_password_right(
+                account=form.account.data,
+                password=form.secret.data
+        ):
+            return NoException(msg="登录成功")
+        # TODO 发放Token
+        else:
+            return ParameterException(msg="登录失败", error_code=602)
 
-@yp_user.route('/get1')
-def get_user1():
-    return 'This is getuser111 page'
+    else:
+        # 若form不满足校验规则，返回报错600，后续可以细化
+        raise ParameterException()
