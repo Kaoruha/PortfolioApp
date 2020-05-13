@@ -10,7 +10,7 @@ from wtforms import Form
 class ClientForm(BaseForm):
     account = StringField(validators=[
         DataRequired(message='不允许为空'),
-        length(min=5, max=32)
+        length(min=4, max=32)
     ])
     secret = StringField()
 

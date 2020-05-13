@@ -36,8 +36,9 @@ class User(Base):
 
     @classmethod
     def is_password_right(cls, account, password):
-        hash = cls.query.filter_by(account=account).first().password
-        if check_password_hash(pwhash=hash, password=password):
-            return True
+        t = cls.query.filter_by(account=account).first()
+        t_hash = t.password
+        if check_password_hash(pwhash=t_hash, password=password):
+            return t
         else:
-            return False
+            return None

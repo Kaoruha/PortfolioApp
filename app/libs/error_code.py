@@ -1,12 +1,8 @@
 # 定义具体的异常报错
 from app.libs.error import APIException
+from flask import request, json
+import datetime
 
-
-class NoException(APIException):
-    error_code = 200
-    msg = (
-        'It works well.'
-    )
 
 
 class TestError(APIException):
