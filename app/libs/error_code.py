@@ -15,7 +15,7 @@ class TestError(APIException):
 class AuthorizationException(APIException):
     error_code = 403
     msg = (
-        'No operation permission!'
+        'No Permission!'
     )
 
 

@@ -1,20 +1,30 @@
 from app.libs.yellowprint import YellowPrint
+from app.authorization.token_auth import login_required
+from flask import jsonify
 
-yp_test = YellowPrint('rp_user', url_prefix='/test')
+yp_test = YellowPrint('yp_test', url_prefix='/test')
+
+
+@yp_test.route('/test1', methods=['POST'])
+def t_test():
+    return 'fuck me'
 
 
 @yp_test.route('/table')
+@login_required
 def table_generation():
     return 'table'
 
 
 @yp_test.route('/table1')
+# @login_required
 def table_generation1():
-    return 'table1'
-
-
-from app.authorization.token_auth import login_required
-
+    resp = jsonify({'error': False})
+    # 跨域设置
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Method'] = '*'
+    resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+    return resp
 
 
 @yp_test.route('/token')

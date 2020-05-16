@@ -40,7 +40,7 @@ def login_required(view_func):
     def verify_t(*args, **kwargs):
         # 1、从请求头上拿到token
         try:
-            token = request.headers["z-token"]
+            token = request.headers["Authorization"]
         except Exception:
             # 1.1、如果没拿到，返回没有权限
             raise AuthorizationException()

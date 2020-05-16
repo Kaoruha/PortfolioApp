@@ -1,3 +1,5 @@
+from flask import request
+
 from app.libs.yellowprint import YellowPrint
 from app.validators.forms import ClientForm
 from app.models.user import User
@@ -5,7 +7,7 @@ from app.libs.error_code import ParameterException
 from app.libs.error import NoException
 from app.authorization.token_auth import creat_token
 
-yp_user = YellowPrint('rp_user', url_prefix='/user')
+yp_user = YellowPrint('yp_user', url_prefix='/user')
 
 
 @yp_user.route('/register', methods=['POST'])
@@ -35,24 +37,40 @@ def user_register():
 
 @yp_user.route('/login', methods=['POST'])
 def user_login():
-    # data = request.json
+    # data = request.get_json
     # account = data['account']
-    # secret = data['secret']
+    # password = data['password']
 
-    # 1、request.data 会自动传入ClientForm
+    # 1、request.get_json 会自动传入ClientForm
+    print(request.get_json())
     form = ClientForm()
+
+    print(form.account)
+    print(form.password)
     # 2、对ClientForm对实例进行校验
     if form.validate():
         account = form.account.data
-        password = form.secret.data
+        password = form.password.data
         try:
             user = User.is_password_right(account=account, password=password)
             if user:
                 token = creat_token(user.id)
                 return NoException(data=token)
+            else:
+                raise ParameterException(msg="查无此人", error_code=602)
         except Exception:
             raise ParameterException(msg="登录失败", error_code=602)
 
     else:
         # 若form不满足校验规则，返回报错600，后续可以细化
         raise ParameterException()
+
+
+@yp_user.route('/test', methods=['GET'])
+def t_te():
+    t = {
+        'code': 200,
+        'name':'sunshine'
+
+    }
+    return t

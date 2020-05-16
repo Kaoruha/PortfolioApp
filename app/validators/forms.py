@@ -12,7 +12,7 @@ class ClientForm(BaseForm):
         DataRequired(message='不允许为空'),
         length(min=4, max=32)
     ])
-    secret = StringField()
+    password = StringField()
 
 
 class TokenForm(Form):
