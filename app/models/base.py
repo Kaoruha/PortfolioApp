@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy, BaseQuery
-from sqlalchemy import Column, Integer, SmallInteger
+from sqlalchemy import Column, Integer, SmallInteger, String
 from datetime import datetime
 
 
@@ -21,11 +21,11 @@ db = SQLAlchemy()
 class Base(db.Model):
     __abstract__ = True  # 变成抽象类，只声明不实现
 
-    create_time = Column(Integer)
+    create_time = Column(String(30))
     status = Column(SmallInteger, default=1)
 
     def __init__(self):
-        self.create_time = int(datetime.now().timestamp())
+        self.create_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def delete(self):
         self.status = 0

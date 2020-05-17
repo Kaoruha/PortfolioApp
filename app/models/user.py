@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy import Column, String, Integer, SmallInteger
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.base import Base, db
@@ -6,10 +8,12 @@ from app.models.base import Base, db
 class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     account = Column(String(50), unique=True, nullable=False)
+    description = Column(String(255))
     email = Column(String(50))
     phone = Column(Integer)
     _password = Column('password', String(100))
     authority = Column(SmallInteger)
+    update_time = Column(String(30))
 
     @property
     def password(self):
@@ -20,11 +24,12 @@ class User(Base):
         self._password = generate_password_hash(raw)
 
     @staticmethod
-    def add_user(account, secret):
+    def add_user(account, password):
         with db.auto_commit():
             temp = User()
             temp.account = account
-            temp.password = secret
+            temp.password = password
+            temp.update_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             db.session.add(temp)
 
     @classmethod

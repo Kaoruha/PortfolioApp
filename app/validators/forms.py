@@ -1,4 +1,4 @@
-from wtforms import StringField, IntegerField
+from wtforms import StringField, IntegerField, BooleanField
 from wtforms.validators import DataRequired, length, Regexp
 from wtforms import ValidationError
 from app.models.user import User
@@ -17,3 +17,11 @@ class ClientForm(BaseForm):
 
 class TokenForm(Form):
     token = StringField(validators=[DataRequired()])
+
+
+class UserFilterForm(BaseForm):
+    start_row = IntegerField()
+    count = IntegerField()
+    account_filter = StringField()
+    sort_by = StringField()
+    descending = BooleanField()

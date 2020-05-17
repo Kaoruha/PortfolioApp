@@ -1,7 +1,7 @@
 from flask import request
 
 from app.libs.yellowprint import YellowPrint
-from app.validators.forms import ClientForm
+from app.validators.forms import ClientForm, UserFilterForm
 from app.models.user import User
 from app.libs.error_code import ParameterException
 from app.libs.error import NoException
@@ -14,7 +14,7 @@ yp_user = YellowPrint('yp_user', url_prefix='/user')
 def user_register():
     # data = request.json
     # account = data['account']
-    # secret = data['secret']
+    # password = data['password']
 
     # 1、request.data 会自动传入ClientForm
     form = ClientForm()
@@ -27,12 +27,12 @@ def user_register():
         else:
             # 5、若用户名不存在，尝试注册用户
             User.add_user(account=form.account.data,
-                          secret=form.secret.data)
+                          password=form.password.data)
             return NoException(msg='注册成功')
 
     else:
         # 若form不满足校验规则，返回报错600，后续可以细化
-        return ParameterException()
+        raise ParameterException()
 
 
 @yp_user.route('/login', methods=['POST'])
@@ -66,11 +66,44 @@ def user_login():
         raise ParameterException()
 
 
-@yp_user.route('/test', methods=['GET'])
-def t_te():
-    t = {
-        'code': 200,
-        'name':'sunshine'
+@yp_user.route('/filter', methods=['POST'])
+def user_get():
+    # data = request.get_json()
+    # page = data['page']
+    # rows_per_page = data['rowsPerPage']
+    # sort_by = data['sortBy']
+    # descending = data['descending']
+    # page, rowsPerPage, sortBy, descending
+    form = UserFilterForm()
+    if form.validate_for_api():
+        start_row = form.start_row.data
+        count = form.count.data
+        account_filter = form.account_filter.data
+        sort_by = form.sort_by.data
+        descending = form.descending.data
 
-    }
-    return t
+        result = User.query.filter(
+            User.account.contains(account_filter)  # 根据account_filter筛选
+        ).filter(
+            User.status == 1  # 筛选没被软删除的用户
+        ).order_by(
+            User.id.desc() if descending else User.id  # 根据descending选择正序or倒序
+        ).all()[start_row:start_row + count]  # 根据start_row和count选择切片
+        print(result)
+        data = []
+        for item in result:
+            t = {
+                "account": item.account,
+                "id": item.id,
+                "update": item.update_time
+            }
+            data.append(t)
+        print(data)
+        return NoException(data=data)
+    else:
+        raise ParameterException
+
+
+@yp_user.route('/delete', methods=['DELETE'])
+def user_delete():
+    pass
