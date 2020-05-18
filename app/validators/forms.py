@@ -1,4 +1,4 @@
-from wtforms import StringField, IntegerField, BooleanField
+from wtforms import StringField, IntegerField, BooleanField, FileField
 from wtforms.validators import DataRequired, length, Regexp
 from wtforms import ValidationError
 from app.models.user import User
