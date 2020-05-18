@@ -19,9 +19,15 @@ class TokenForm(Form):
     token = StringField(validators=[DataRequired()])
 
 
-class UserFilterForm(BaseForm):
+class FilterForm(BaseForm):
     start_row = IntegerField()
     count = IntegerField()
     account_filter = StringField()
     sort_by = StringField()
     descending = BooleanField()
+
+
+class TagForm(BaseForm):
+    name = StringField()
+    description = StringField()
+    icon_url = StringField()

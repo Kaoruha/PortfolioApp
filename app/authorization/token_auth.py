@@ -57,3 +57,13 @@ def login_required(view_func):
         return view_func(*args, **kwargs)
 
     return verify_t
+
+
+def get_account_by_token():
+    try:
+        token = request.headers["Authorization"]
+    except Exception:
+        # 1.1、如果没拿到，返回没有权限
+        raise AuthorizationException()
+    t = verify_token(token)
+    return t

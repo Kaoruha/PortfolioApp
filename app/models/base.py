@@ -22,10 +22,11 @@ class Base(db.Model):
     __abstract__ = True  # 变成抽象类，只声明不实现
 
     create_time = Column(String(30))
-    status = Column(SmallInteger, default=1)
+    status = Column(SmallInteger, default=1)  # 1 是True激活；  0 是False删除
 
     def __init__(self):
         self.create_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def delete(self):
-        self.status = 0
+        with db.auto_commit():
+            self.status = 0

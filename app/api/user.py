@@ -1,16 +1,17 @@
 from flask import request
-
+from app.authorization.token_auth import login_required
 from app.libs.yellowprint import YellowPrint
-from app.validators.forms import ClientForm, UserFilterForm
+from app.validators.forms import ClientForm, FilterForm
 from app.models.user import User
 from app.libs.error_code import ParameterException
 from app.libs.error import NoException
-from app.authorization.token_auth import creat_token
+from app.authorization.token_auth import creat_token, verify_token
 
 yp_user = YellowPrint('yp_user', url_prefix='/user')
 
 
 @yp_user.route('/register', methods=['POST'])
+@login_required
 def user_register():
     # data = request.json
     # account = data['account']
@@ -67,6 +68,7 @@ def user_login():
 
 
 @yp_user.route('/filter', methods=['POST'])
+# @login_required
 def user_get():
     # data = request.get_json()
     # page = data['page']
@@ -74,7 +76,7 @@ def user_get():
     # sort_by = data['sortBy']
     # descending = data['descending']
     # page, rowsPerPage, sortBy, descending
-    form = UserFilterForm()
+    form = FilterForm()
     if form.validate_for_api():
         start_row = form.start_row.data
         count = form.count.data
@@ -104,6 +106,16 @@ def user_get():
         raise ParameterException
 
 
-@yp_user.route('/delete', methods=['DELETE'])
+@yp_user.route('/delete', methods=['POST'])
+@login_required
 def user_delete():
-    pass
+    uid = request.get_json()['uid']
+    t = User.is_exist(uid=uid)
+    if t:
+        u = User.query.filter_by(id=uid).first()
+        u.delete()
+        return NoException(msg='删除成功')
+    else:
+        return ParameterException(msg="查无此人", error_code=602)
+
+

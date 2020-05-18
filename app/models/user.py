@@ -8,7 +8,7 @@ from app.models.base import Base, db
 class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     account = Column(String(50), unique=True, nullable=False)
-    description = Column(String(255))
+    description = Column(String(255), default='-')
     email = Column(String(50))
     phone = Column(Integer)
     _password = Column('password', String(100))
@@ -34,7 +34,14 @@ class User(Base):
 
     @classmethod
     def is_user_exist(cls, account):
-        if cls.query.filter_by(account=account).first():
+        if cls.query.filter_by(account=account, status=1).first():
+            return True
+        else:
+            return False
+
+    @classmethod
+    def is_exist(cls, uid):
+        if cls.query.filter_by(id=uid, status=1).first():
             return True
         else:
             return False
@@ -47,3 +54,7 @@ class User(Base):
             return t
         else:
             return None
+
+    @classmethod
+    def get_name_by_token(cls, token):
+        pass
