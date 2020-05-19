@@ -129,3 +129,4 @@ dmypy.json
 *.ipr
 *.iws
 .idea/
+app/config/secure.py
