@@ -36,3 +36,8 @@ def t_get_token():
     print(s)
     print(a)
     return a
+
+
+@yp_test.route('/upload')
+def t_upload():
+    return 'hh'
