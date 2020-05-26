@@ -93,3 +93,9 @@ def tag_delete():
         return NoException(msg='删除成功')
     else:
         return ParameterException(msg="查无此人", error_code=602)
+
+
+@yp_tag.route('/upload', methods=['POST'])
+def tag_upload():
+    print(11)
+    return '111'
