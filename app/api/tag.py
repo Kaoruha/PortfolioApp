@@ -1,10 +1,14 @@
+import os
 from flask import request
 from app.authorization.token_auth import login_required, get_account_by_token
 from app.libs.yellowprint import YellowPrint
-from app.validators.forms import TagForm, FilterForm
+from app.config.setting import UPLOAD_PATH
+from app.validators.forms import TagForm, FilterForm, TagImageForm
 from app.models.tag import Tag
 from app.libs.error_code import ParameterException
 from app.libs.error import NoException
+from werkzeug.utils import secure_filename
+import uuid
 
 yp_tag = YellowPrint('yp_tag', url_prefix='/tag')
 
@@ -97,5 +101,17 @@ def tag_delete():
 
 @yp_tag.route('/upload', methods=['POST'])
 def tag_upload():
-    print(11)
-    return '111'
+    # form = TagImageForm()
+    # print(form)
+    file = request.files.get('file')
+    form = TagImageForm(data={'file': file})
+    if form.validate():
+        t = form.file.data
+        file_name = uuid.uuid4().hex + '.' + t.filename.split('.')[-1]
+        path = os.getcwd() + '\\app' + UPLOAD_PATH + '\\' + file_name
+        t.save(path)
+        # TODO 数据库添加
+        # print(path)
+        return NoException(msg="上传成功")
+    else:
+        raise ParameterException()
