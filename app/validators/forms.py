@@ -1,6 +1,5 @@
 from wtforms import StringField, IntegerField, BooleanField, FileField
 from wtforms.validators import DataRequired, length, Regexp
-from wtforms import ValidationError
 from app.models.user import User
 
 from app.validators.base import BaseForm
@@ -31,3 +30,8 @@ class TagForm(BaseForm):
     name = StringField()
     description = StringField()
     icon_url = StringField()
+
+
+class TagImageForm(Form):
+    file = FileField()  # TODO 文件类型校验
+    id = IntegerField()
