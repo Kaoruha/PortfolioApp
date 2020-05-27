@@ -1,11 +1,11 @@
 from flask import request
 from wtforms import Form
-
 from app.libs.error_code import ParameterException
 
 
 class BaseForm(Form):
     # 网络请求相关的元表单
+    # 数据传输为Json
     def __init__(self):
         data = request.get_json(silent=True)
         args = request.args.to_dict()
