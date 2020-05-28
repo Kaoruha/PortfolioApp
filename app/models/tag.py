@@ -1,6 +1,7 @@
 from datetime import datetime
-
 from sqlalchemy import Column, String, Integer, SmallInteger
+from app.libs.error_code import ParameterException
+from app.libs.error import NoException
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.base import Base, db
 
@@ -26,15 +27,22 @@ class Tag(Base):
             db.session.add(temp)
 
     @classmethod
-    def is_exist(cls, uid):
-        if cls.query.filter_by(id=uid, status=1).first():
-            return True
-        else:
-            return False
-
-    @classmethod
-    def is_tag_exist(cls, tag_id):
+    def is_exist(cls, tag_id):
         if cls.query.filter_by(id=tag_id, status=1).first():
             return True
         else:
             return False
+
+    def update(self, name='', description='', icon_url=''):
+        try:
+            with db.auto_commit():
+                t = Tag.query.filter_by(id=2, status=1).first()
+                if name != '':
+                    t.name = name
+                if description != '':
+                    t.description = description
+                if icon_url != '':
+                    t.icon_url = icon_url
+                return NoException(msg='更新成功')
+        except Exception as e:
+            raise e

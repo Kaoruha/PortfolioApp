@@ -7,7 +7,6 @@ from app.validators.forms import TagForm, FilterForm, TagImageForm
 from app.models.tag import Tag
 from app.libs.error_code import ParameterException
 from app.libs.error import NoException
-from werkzeug.utils import secure_filename
 import uuid
 
 yp_tag = YellowPrint('yp_tag', url_prefix='/tag')
@@ -106,12 +105,19 @@ def tag_upload():
     file = request.files.get('file')
     form = TagImageForm(data={'file': file})
     if form.validate():
-        t = form.file.data
-        file_name = uuid.uuid4().hex + '.' + t.filename.split('.')[-1]
+        img = form.file.data
+        file_name = uuid.uuid4().hex + '.' + img.filename.split('.')[-1]
         path = os.getcwd() + '\\app' + UPLOAD_PATH + '\\' + file_name
-        t.save(path)
-        # TODO 数据库添加
-        # print(path)
-        return NoException(msg="上传成功")
+        img.save(path)
+
+        t = Tag.is_exist(tag_id=1)
+        if t:
+            u = Tag.query.filter_by(id=1).first()
+            u.update(icon_url=file_name)
+            return NoException(msg="上传成功")
+        else:
+            return ParameterException(msg="查无此人", error_code=602)
+
+
     else:
         raise ParameterException()
