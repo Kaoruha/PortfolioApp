@@ -41,3 +41,18 @@ def t_get_token():
 @yp_test.route('/upload')
 def t_upload():
     return 'hh'
+
+
+@yp_test.route('/unity', methods=['GET'])
+def t_unity():
+    t1 = {
+        'building': 'a1'
+    }
+    t2 = {
+        'building': 'a2'
+    }
+    t = {
+        'data': [t1, t2]
+    }
+    print("It's Time Now!!")
+    return t
