@@ -11,7 +11,7 @@ yp_user = YellowPrint('yp_user', url_prefix='/user')
 
 
 @yp_user.route('/register', methods=['POST'])
-@login_required
+# @login_required
 def user_register():
     # data = request.json
     # account = data['account']
